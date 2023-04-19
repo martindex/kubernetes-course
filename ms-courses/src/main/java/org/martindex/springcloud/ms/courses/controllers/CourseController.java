@@ -1,9 +1,9 @@
-package org.martindex.springcloud.ms.users.controllers;
+package org.martindex.springcloud.ms.courses.controllers;
+
 
 import java.util.List;
-import java.util.Optional;
-import org.martindex.springcloud.ms.users.dtos.UserDto;
-import org.martindex.springcloud.ms.users.services.impl.UserService;
+import org.martindex.springcloud.ms.courses.dtos.CourseDto;
+import org.martindex.springcloud.ms.courses.services.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,50 +18,50 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/")
-public class UserController {
+public class CourseController {
 
-    private final UserService userService;
+    private final CourseService courseService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public CourseController(CourseService courseService) {
+        this.courseService = courseService;
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> users = userService.getList();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<List<?>> getList() {
+        return ResponseEntity.ok(courseService.getList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        Optional<UserDto> user = userService.getById(id);
-        return user.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        return courseService.getById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto) {
+    public ResponseEntity<?> create(@RequestBody @Valid CourseDto courseDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.save(userDto));
+                .body(courseService.save(courseDto));
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody @Valid UserDto userDto) {
-        return userService.getById(userDto.getId())
-                .map(userService::save)
+    public ResponseEntity<?> update(@RequestBody @Valid CourseDto courseDto) {
+        return courseService.getById(courseDto.getId())
+                .map(courseService::save)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        return userService.getById(id)
+        return courseService.getById(id)
                 .map(existingCourse -> {
-                    userService.delete(id);
+                    courseService.delete(id);
                     return ResponseEntity.noContent().build();
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
-}
 
+}
 
