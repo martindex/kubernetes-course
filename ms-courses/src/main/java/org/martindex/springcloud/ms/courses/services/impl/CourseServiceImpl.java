@@ -34,6 +34,12 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseDto> getList() {
         return ((List<Course>)courseRepository.findAll())
                 .stream()
+                .map(value -> {
+                    List<Long> ids = value.getCourseUserList().stream().map(CourseUser::getUserId).toList();
+                    List<UserRemote> userRemoteList = userRemoteClientRest.getUserListByIds(ids);
+                    value.setUserRemoteList(userRemoteList);
+                    return value;
+                })
                 .map(course -> modelMapper.map(course, CourseDto.class))
                 .collect(Collectors.toList());
     }
@@ -41,6 +47,12 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Optional<CourseDto> getById(Long id) {
         return courseRepository.findById(id)
+                .map(value -> {
+                    List<Long> ids = value.getCourseUserList().stream().map(CourseUser::getUserId).toList();
+                    List<UserRemote> userRemoteList = userRemoteClientRest.getUserListByIds(ids);
+                    value.setUserRemoteList(userRemoteList);
+                    return value;
+                })
                 .map(value -> modelMapper.map(value, CourseDto.class));
     }
 
@@ -97,5 +109,10 @@ public class CourseServiceImpl implements CourseService {
                 });
     }
 
+    @Override
+    @Transactional
+    public void deleteCourseUserByUserId(Long courseUserId) {
+        courseRepository.deleteCourseUserByUserId(courseUserId);
+    }
 
 }

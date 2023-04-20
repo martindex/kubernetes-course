@@ -2,6 +2,7 @@ package org.martindex.springcloud.ms.users.services.impl;
 
 import java.util.List;
 import java.util.Optional;
+import org.martindex.springcloud.ms.users.clients.rest.CourseRemoteClientRest;
 import org.martindex.springcloud.ms.users.dtos.UserDto;
 import org.martindex.springcloud.ms.users.entities.User;
 import org.martindex.springcloud.ms.users.repositories.UserRepository;
@@ -14,10 +15,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final CourseRemoteClientRest courseRemoteClientRest;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, CourseRemoteClientRest courseRemoteClientRest) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.courseRemoteClientRest = courseRemoteClientRest;
     }
 
     @Override
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
+        courseRemoteClientRest.deleteCourseUser(id);
     }
 
     @Override

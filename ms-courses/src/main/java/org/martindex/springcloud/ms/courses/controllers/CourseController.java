@@ -85,5 +85,12 @@ public class CourseController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
+    @DeleteMapping("/delete-user/{userId}")
+    public ResponseEntity<?> deleteCourseUser(@PathVariable Long userId) {
+        courseService.deleteCourseUserByUserId(userId);
+        return ResponseEntity.notFound().build();
+    }
+
 }
 

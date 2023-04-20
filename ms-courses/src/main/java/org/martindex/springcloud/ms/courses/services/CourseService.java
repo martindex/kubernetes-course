@@ -16,5 +16,7 @@ public interface CourseService {
     Optional<UserRemoteDto> createUser(UserRemoteDto userRemoteDto, Long courseId);
     Optional<UserRemoteDto> deallocateUser(UserRemoteDto userRemoteDto, Long courseId);
 
+    void deleteCourseUserByUserId(Long courseUserId);
+
 }
 
