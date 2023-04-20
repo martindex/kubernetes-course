@@ -2,6 +2,7 @@ package org.martindex.springcloud.ms.courses.controllers;
 
 
 import java.util.List;
+import org.martindex.springcloud.ms.courses.clients.dtos.UserRemoteDto;
 import org.martindex.springcloud.ms.courses.dtos.CourseDto;
 import org.martindex.springcloud.ms.courses.services.CourseService;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,27 @@ public class CourseController {
                     courseService.delete(id);
                     return ResponseEntity.noContent().build();
                 })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/assign-user/{courseId}")
+    public ResponseEntity<?> assignUserRemote(@RequestBody UserRemoteDto userRemoteDto, @PathVariable Long courseId) {
+        return courseService.assignUser(userRemoteDto, courseId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/create-user/{courseId}")
+    public ResponseEntity<?> createUserRemote(@RequestBody UserRemoteDto userRemoteDto, @PathVariable Long courseId) {
+        return courseService.createUser(userRemoteDto, courseId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/delete-user/{courseId}")
+    public ResponseEntity<?> deleteUserRemote(@RequestBody UserRemoteDto userRemoteDto, @PathVariable Long courseId) {
+        return courseService.deallocateUser(userRemoteDto, courseId)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 

@@ -3,7 +3,7 @@ package org.martindex.springcloud.ms.users.controllers;
 import java.util.List;
 import java.util.Optional;
 import org.martindex.springcloud.ms.users.dtos.UserDto;
-import org.martindex.springcloud.ms.users.services.impl.UserService;
+import org.martindex.springcloud.ms.users.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getUserList() {
         List<UserDto> users = userService.getList();
         return ResponseEntity.ok(users);
     }
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody @Valid UserDto userDto) {
+    public ResponseEntity<?> updateUser(@RequestBody @Valid UserDto userDto) {
         return userService.getById(userDto.getId())
                 .map(userService::save)
                 .map(ResponseEntity::ok)
@@ -54,7 +55,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         return userService.getById(id)
                 .map(existingCourse -> {
                     userService.delete(id);
@@ -62,6 +63,12 @@ public class UserController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getUserListByIds(@RequestParam List<Long> ids){
+        return ResponseEntity.ok(userService.getListByIds(ids));
+    }
+
 }
 
 

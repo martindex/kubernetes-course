@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.martindex.springcloud.ms.users.dtos.UserDto;
 import org.martindex.springcloud.ms.users.entities.User;
 import org.martindex.springcloud.ms.users.repositories.UserRepository;
-import org.martindex.springcloud.ms.users.services.impl.UserService;
+import org.martindex.springcloud.ms.users.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> getById(Long id) {
-        return userRepository.findById(id).map(u -> modelMapper.map(u, UserDto.class));
+        return userRepository.findById(id)
+                .map(u -> modelMapper.map(u, UserDto.class));
     }
 
     @Override
@@ -42,6 +43,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<UserDto> getListByIds(Iterable<Long> ids) {
+        return ((List<User>)userRepository.findAllById(ids))
+                .stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .toList();
+    }
+
+    @Override
+    public Optional<UserDto> getByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> modelMapper.map(user, UserDto.class));
     }
 }
 
