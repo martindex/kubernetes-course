@@ -71,7 +71,7 @@ public class CourseController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/create-user/{courseId}")
+    @PostMapping("/create-user/{courseId}")
     public ResponseEntity<?> createUserRemote(@RequestBody UserRemoteDto userRemoteDto, @PathVariable Long courseId) {
         return courseService.createUser(userRemoteDto, courseId)
                 .map(ResponseEntity::ok)
