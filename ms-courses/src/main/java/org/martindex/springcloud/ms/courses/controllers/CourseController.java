@@ -89,7 +89,7 @@ public class CourseController {
     @DeleteMapping("/delete-user/{userId}")
     public ResponseEntity<?> deleteCourseUser(@PathVariable Long userId) {
         courseService.deleteCourseUserByUserId(userId);
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
 
 }
